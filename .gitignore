@@ -1,0 +1,16 @@
+setup.exe
+*.tmp
+*.bak
+/build
+Build.bat
+Manual.docx
+META.*
+MYMETA.*
+Makefile
+Makefile.PL
+_build/
+blib/
+pm_to_blib
+ignore.txt
+install/output/
+ExpoertHTML-*.zip

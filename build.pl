@@ -33,65 +33,39 @@ sub ACTION_git {
 	print $result;
 }
 
-	sub ACTION_tidy {
-	my $self = shift;
-	$self->depends_on("test");
-	use Perl::Tidy;
-	$self->do_system(qw(svn commit));
-	}
-
-
-
 END_SUBS
 
-my $class = Module::Build->subclass ( class => 'Build_with_Zip', code => $sub );
+my $class
+    = Module::Build->subclass( class => 'Build_with_Zip', code => $sub );
 
 my $builder = $class->new(
-    module_name         => 'Excel::Template::XLSX',
-    license             => 'perl',
-    dist_author         => q{Dave Clarke <dclarke@cpan.org>},
-    dist_version_from   => 'lib/Excel/Template/XLSX.pm',
-    dist_abstract       => q[
-Programattically creates Excel (.xlsx) files from a template, and appends
-content by sub-classing Excel::Writer::XLSX. ],
+   module_name       => 'Excel::Template::XLSX',
+   license           => 'perl',
+   dist_author       => q{Dave Clarke <dclarke@cpan.org>},
+   dist_version_from => 'lib/Excel/Template/XLSX.pm',
+   dist_abstract     => q[
+Re-creates Excel (.xlsx) files from a template.  Excel
+content can be appended using Excel::Writer::XLSX. ],
 
-    build_requires => {
-        'Test::More' => 0,
-        'Test::More' => 0,
-        'Test::CheckManifest' => 1.29,
-    },
+   build_requires => {
+      'Test::More'          => 0,
+      'Test::Differences'   => 0,
+      'Test::CheckManifest' => 1.29,
+      'Template::Tiny'      => 0,
+   },
 
-    configure_requires => {
-        'Module::Build' => 0.4,
-    },
+   configure_requires => { 'Module::Build' => 0.4, },
 
-    requires => {
-				
-				'perl' 																				=> '5.12.0',
-				'Excel::Writer::XLSX' 												=> 0.81,
-				'Spreadsheet::ParseXLSX' 											=> 0.16,
-        'Archive::Zip'                                => 0,
-        'Carp'                                        => 0,
-        'CGI'					                                => 0,
-				'CGI::Carp'					                      		=> 0,
-        'Compress::Zlib'                              => 0,
-        'DBI'                                         => 0,
-        'File::Basename'                              => 0,
-        'File::Copy'                                  => 0,
-        'File::Find'                                  => 0,
-        'File::Temp'                                  => 0,
-        'Getopt::Long'                                => 0,
-        'IO::Scalar'                                  => 0,
-        'List::Util'                                  => 1.38,
-        'Test::Differences'                           => 0,
-        'Test::More'                                  => 0,
-        'Text::Autoformat'                            => 0,
-         'Time::HiRes'                                => 0,
-        'URI::Escape'                                 => 0,
-        'XML::RSS'                                    => 0,
-    },
-    add_to_cleanup      => [qw(Excel-Template-XLSX-* *.zip *.pui *.prj make.bat) ],
-    create_makefile_pl => 'traditional',
+   requires => {
+      'perl'                 => '5.12.0',
+      'Excel::Writer::XLSX'  => 0.81,
+      'Archive::Zip'         => 0,
+      'Graphics::ColorUtils' => 0,
+      'Scalar::Util'         => 0,
+      'XML::Twig'            => 0,
+   },
+   add_to_cleanup => [qw(Excel-Template-XLSX-* *.zip *.pui *.prj make.bat)],
+   create_makefile_pl => 'traditional',
 
 );
 

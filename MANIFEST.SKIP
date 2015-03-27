@@ -80,3 +80,6 @@
 ^Excel-Template-XLSX-[\d\.\_]+
 .zip$
 build_zip.bat
+
+# Avoid scrap directory
+\bscrap\b
