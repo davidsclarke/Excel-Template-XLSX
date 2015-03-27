@@ -76,8 +76,8 @@
 \bbuild.com$
 ^MANIFEST\.SKIP
 
-# Avoid archives of this distribution (but not PPM)
-^Excel-Template-XLSX-[\d\.\_]+
+# Avoid distribution files
+^Excel-Template-XLSX
 .zip$
 build_zip.bat
 

@@ -24,6 +24,17 @@ sub ACTION_all {
 	print map {`build $_`} qw(test distcheck dist git);
 }
 
+sub ACTION_CPAN {
+   my $mod = 'Excel::Template::XLSX';
+   (my $path = $mod) =~ s|::|/|g;
+	my $ver = eval qq{require 'lib/${path}.pm'; \$${mod}::VERSION};
+   (my $tar = $mod) =~ s|::|\-|g;
+   $tar = "${tar}-${ver}.tar.gz"; 
+   use CPAN::Uploader;
+   my $config = CPAN::Uploader->read_config_file();
+   CPAN::Uploader->upload_file($tar, $config);
+}
+
 sub ACTION_git {
 	my $result;
 	$result = `git add lib\*.pm lib\*\*.pm lib\*\*\*.pm lib\*\*\*\*.pm `;
