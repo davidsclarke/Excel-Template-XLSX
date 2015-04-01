@@ -15,7 +15,7 @@ $SIG{__DIE__} = sub { $CAPTURE = $_[0] };
 
 eval {
 # Attempt to create invalid output file when calling Excel::Writer::XLSX->new()
-   Excel::Template::XLSX->new( '*', '' );
+   Excel::Template::XLSX->new( '\x00', '' );
 };
 
 # Restore previous warn handler

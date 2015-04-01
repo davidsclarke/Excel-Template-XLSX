@@ -1,5 +1,10 @@
 Revision history for Excel-Template-XLSX 
 
-1.000   03-Feb-2015
-        Initial Release of Excel-Template-XLSX to GitHub
+v1.0.1  30-Mar-2015
+        Fixed t\08-open-output.t  '*' is a valid file name on
+        unix based systems.  Test failed.   
+        Changed test file to null character \x00
+
+v1.0.0  26-Mar-2015
+        Initial Release of Excel-Template-XLSX to GitHub and CPAN
 
