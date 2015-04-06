@@ -27,12 +27,14 @@ sub ACTION_all {
 sub ACTION_CPAN {
    my $mod = 'Excel::Template::XLSX';
    (my $path = $mod) =~ s|::|/|g;
-	my $ver = eval qq{require 'lib/${path}.pm'; \$${mod}::VERSION};
+   my $ver = eval qq{require 'lib/${path}.pm'; \$${mod}::VERSION};
    (my $tar = $mod) =~ s|::|\-|g;
    $tar = "${tar}-${ver}.tar.gz"; 
-   use CPAN::Uploader;
-   my $config = CPAN::Uploader->read_config_file();
-   CPAN::Uploader->upload_file($tar, $config);
+#   use CPAN::Uploader;
+#   my $config = CPAN::Uploader->read_config_file();
+#   $config->{debug} = 1;
+#   CPAN::Uploader->upload_file($tar, $config);
+#   # Does not work - gets 401 auth required
 }
 
 sub ACTION_git {

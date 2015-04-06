@@ -29,7 +29,7 @@ my ( $gfh, $gfilename ) = tempfile( SUFFIX => '.xlsx' );
 my ( $self, $twbk ) = Excel::Template::XLSX->new( $gfilename, $efilename );
 $self->parse_template();
 
-my $got1 = ( sort keys $twbk->{_str_table} )[1];
+my $got1 = ( sort keys %{ $twbk->{_str_table} } )[1];
 is( $got1, 'A1A1', "String" );
 
 my $expected_rich = <<"END_RICH";
@@ -49,7 +49,7 @@ $expected_rich =~ tr/\r\n//d;
 # Split the XML into chunks at element boundaries.
 my @expected_rich = split /(?<=>)(?=<)/, $expected_rich;
 
-my $got_rich = ( sort keys $twbk->{_str_table} )[0];
+my $got_rich = ( sort keys %{ $twbk->{_str_table} } )[0];
 my @got_rich = split /(?<=>)(?=<)/, $got_rich;
 
 for ( 0 .. $#got_rich ) {

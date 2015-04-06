@@ -1,5 +1,11 @@
 Revision history for Excel-Template-XLSX 
 
+v1.0.2  01-Apr-2015
+        Removed CPAN::Uploader from build script
+        Fixed t\08-open-output.t  '*' is a valid file name on
+        unix based systems.  Test failed.   
+        Changed test file to null character \x00invalid
+
 v1.0.1  30-Mar-2015
         Fixed t\08-open-output.t  '*' is a valid file name on
         unix based systems.  Test failed.   

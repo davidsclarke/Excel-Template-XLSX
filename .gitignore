@@ -1,4 +1,3 @@
-setup.exe
 *.tmp
 *.bak
 /build
@@ -13,4 +12,7 @@ blib/
 pm_to_blib
 ignore.txt
 install/output/
-ExpoertHTML-*.zip
+Excel-Template-XLSX-*.tar.gz
+scrap/
+.gitignore
+cover_db/
