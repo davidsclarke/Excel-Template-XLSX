@@ -1,5 +1,8 @@
 Revision history for Excel-Template-XLSX 
 
+v1.0.3  06-Apr-2015
+        Fixed t\08-open-output.t to just use a null string
+
 v1.0.2  01-Apr-2015
         Removed CPAN::Uploader from build script
         Fixed t\08-open-output.t  '*' is a valid file name on

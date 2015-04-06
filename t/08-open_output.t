@@ -10,16 +10,20 @@ use Test::More;
 our $CAPTURE = '';
 
 # Setup to capture warnings
-my $sig = $SIG{__DIE__};
+my $sigd = $SIG{__DIE__};
 $SIG{__DIE__} = sub { $CAPTURE = $_[0] };
 
+my $sigw = $SIG{__WARN__};
+$SIG{__WARN__} = sub { };
+
 eval {
-# Attempt to create invalid output file when calling Excel::Writer::XLSX->new()
-   Excel::Template::XLSX->new( 'invalid\x00', '' );
+   # Excel::Writer::XLSX->new() requires a file name
+   Excel::Template::XLSX->new( '', '' );
 };
 
-# Restore previous warn handler
-$SIG{__DIE__} = $sig;
+# Restore previous warn handlers
+$SIG{__DIE__}  = $sigd;
+$SIG{__WARN__} = $sigw;
 
 # remove reason from error message
 ( my $got = $CAPTURE ) =~ s/object.*/object/s;

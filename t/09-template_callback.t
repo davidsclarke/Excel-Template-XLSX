@@ -40,7 +40,7 @@ $self->{template_callback} = sub {
 };
 $self->parse_template();
 
-my $got1 = ( sort keys $twbk->{_str_table} )[0];
+my $got1 = ( sort keys %{ $twbk->{_str_table} } )[0];
 is( $got1, 'Output', "Shared Strings" );
 
 my $got2 = $twbk->{_worksheets}[0]{_header};
