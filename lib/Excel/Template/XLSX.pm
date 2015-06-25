@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'Excel::Writer::XLSX';
 
-use version; our $VERSION = version->declare("v1.0.3");
+use version; our $VERSION = version->declare("v1.0.4");
 
 use Archive::Zip;
 use Graphics::ColorUtils 'rgb2hls', 'hls2rgb';
@@ -30,6 +30,11 @@ Excel-Template-XLSX - Create Excel .xlsx files starting from (one or more) templ
    
    # Add a worksheet, ... and anything else you would do with Excel::Writer::XLSX
    $worksheet = $workbook->add_worksheet();
+
+   # Although Excel::Writer::XLSX says the workbook will automatically get 
+   # closed during global destruction.  This wrapper around Excel::Writer::XLSX may
+   # mess this up, and it is better to specifically close your workbook when you are done.
+   $workbook->close();
 
 =head1 DESCRIPTION
 
@@ -126,6 +131,7 @@ return value, then just the $self object is returned.
       PRINT_TITLES   => {},
       SHARED_STRINGS => [],
       THEMES         => [],
+      UNIQUE_SHEETS  => {},
       ZIP            => [],
 
       template_callback => undef,
@@ -182,7 +188,7 @@ sub parse_template {
 
 =head2 parse_template
 
-Parses common elements of the Spreaadsheet, such as themes, styles, and strings.
+Parses common elements of the Spreadsheet, such as themes, styles, and strings.
 These are stored in the main object ($self).
 
 Finds each sheet in the workbook, and initiates parsing of each sheet.
@@ -272,16 +278,18 @@ properties.  Properties in subsequent workbooks are ignored.
       } $files->{workbook}->find_nodes('//definedNames/definedName');
 
       # Sheets: Add a worksheet for each sheet in workbook
-      # Rename sheet if workbook already has a sheet by that name
-      my @sheet_names = @{ $self->{EWX}{_sheetnames} };
+      # Rename sheet if template(s) already has a sheet by that name
       map {
          my $name = $_->att('name');
          my $test = $name;
          for ( my $i = 1;; $i++ ) {
-            last unless grep( /^${test}$/, @sheet_names );
+            last unless defined $self->{UNIQUE_SHEETS}{$test};
             $test = $name . "($i)";
          }
          my $sheet = $self->{EWX}->add_worksheet($test);
+
+         my $index = @{ $self->{EWX}->{_worksheets} };
+         $self->{UNIQUE_SHEETS}{$test} = $index-1;
 
          my $range = $self->{PRINT_AREA}{$name};
          $sheet->print_area($range) if $range;
@@ -338,7 +346,7 @@ processed.
    my $template = Template::Tiny->new( TRIM => 1 );
    $self->{template_callback} = sub {
       my ($self, $textref) = @_;
-      $template->process($textref, { template => 'Output' }, $textref);
+      $template->process($textref, { template => 'Output' }, $textref );
    };
 
    $self->parse_template();
@@ -1030,7 +1038,7 @@ heights, Sheet selection, and Tab Color)
       'sheetView/selection' => sub {
          my ( $twig, $selection ) = @_;
          my $range = $selection->att('sqref')
-             // $selection->att('activeCell') // 'A:1';
+             // $selection->att('activeCell') // 'A1';
          $sheet->set_selection($range);
          $twig->purge;
       },

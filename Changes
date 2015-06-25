@@ -1,5 +1,8 @@
 Revision history for Excel-Template-XLSX 
 
+v1.0.4  25-Jun-2015
+        Fixed checking of duplicate sheet names in template, Cell A1 changed from A:1
+
 v1.0.3  06-Apr-2015
         Fixed t\08-open-output.t to just use a null string
 
