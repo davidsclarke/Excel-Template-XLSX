@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'Excel::Writer::XLSX';
 
-use version; our $VERSION = version->declare("v1.0.4");
+use version; our $VERSION = version->declare("v1.0.5");
 
 use Archive::Zip;
 use Graphics::ColorUtils 'rgb2hls', 'hls2rgb';
@@ -129,6 +129,7 @@ return value, then just the $self object is returned.
       NEED_PROPS     => 1,
       PRINT_AREA     => {},
       PRINT_TITLES   => {},
+      MERGED_RANGES  => {},
       SHARED_STRINGS => [],
       THEMES         => [],
       UNIQUE_SHEETS  => {},
@@ -213,7 +214,6 @@ properties.  Properties in subsequent workbooks are ignored.
       status   => 'status',
    };
 
-   #   foreach my $zip ( @{ $self->{ZIP} } ) {
    for my $z ( 0 .. $#{ $self->{ZIP} } ) {
       my $zip = $self->{ZIP}[$z] // next;
       $self->{PRINT_TITLES}   = {};
@@ -995,13 +995,13 @@ heights, Sheet selection, and Tab Color)
 
          if ( my $ref = $merge_area->att('ref') ) {
             my ( $topleft, $bottomright ) = $ref =~ /([^:]+):([^:]+)/;
-            my ( $tr,      $lc )          = $self->_cell_to_row_col($topleft);
-            my ( $br, $rc ) = $self->_cell_to_row_col($bottomright);
+            # my ( $tr, $lc )               = $self->_cell_to_row_col($topleft);
+            # my ( $br, $rc )               = $self->_cell_to_row_col($bottomright);
 
-       # Merged Ranges/Areas (need to supply blank content and default format)
-       # content and formatting will be added from the parsed cell
-            $sheet->merge_range( $tr, $lc, $br, $rc, '',
-               $self->{DEFAULT_FORMAT} );
+            # Merged Ranges/Areas: save the address for pass 2.
+            # cells within the merged range will be processed with 
+            # merge_range_type(), instead of write()
+            $self->{MERGED_RANGES}{$topleft} = $ref;
          }
          $twig->purge;
       },
@@ -1081,20 +1081,31 @@ font, and number formats.
                 : $cell->first_child('v');
             my $val = $val_xml ? $val_xml->text() : undef;
 
-            my $format_idx = $s || 0;
+            my $format_idx = $s // 0;
             my $format = $self->{FORMATS}[$format_idx];
 
+            # Formatted cell, no contents
             if ( !defined($val) ) {
-               $val = '';
+               $sheet->write_blank($a1, $val, $format);
+               next;
             }
+
             if ( $t eq 's' ) {
                $string_index = $val;
                $val          = $self->{SHARED_STRINGS}[$val];
 
+               my $is_array = ref($val) eq 'ARRAY';
+               my @aval = $is_array ? @$val : ($val);
+               if ( my $ref = $self->{MERGED_RANGES}{$a1} ) {
+                 my $type = $is_array ? 'rich_string' : 'string';
+                 $sheet->merge_range_type($type, $ref, @aval, $format );
+                 next;
+               }
+
                # Special case for multiple formats in a cell
                # see _parse_shared_strings for rPr nodes
-               if ( ref($val) eq 'ARRAY' ) {
-                  $sheet->write_rich_string( $a1, @$val );
+               if ( $is_array ) {
+                  $sheet->write_rich_string( $a1, @aval );
                   next;
                }
                if ( my $url = $self->{HYPERLINKS}{$a1} ) {
@@ -1104,21 +1115,29 @@ font, and number formats.
                $sheet->write_string( $a1, $val, $format );
                next;
             }
+
+            # In-line string (not seen in practice)
             elsif ( $t eq 'str' ) {
                $val = '=' . $cell->first_child('f')->text();
             }
+
+            # Formulas
             elsif ( $t eq 'n' ) {
                if ( my $form_child = $cell->first_child('f') ) {
-                  my $isarray = $form_child->att('t');
-                  my $ref     = $form_child->att('ref');
-                  my $formula = $form_child->text() // q[="No Formula Found"];
-                  if ($isarray) {
+                  my $is_array = $form_child->att('t');
+                  my $ref      = $form_child->att('ref');
+                  my $formula  = $form_child->text() // q[="No Formula Found"];
+                  if ($is_array) {
                      $sheet->write_array_formula( $ref, "=${formula}",
                         $format, $val );
                   }
                   else {
-                     $sheet->write_formula( $a1, "=${formula}", $format,
-                        $val );
+                     if ( my $ref = $self->{MERGED_RANGES}{$a1} ) {
+                       $sheet->merge_range_type('formula', $ref, "=${formula}", $format, $val);
+                     } else {
+                        $sheet->write_formula( $a1, "=${formula}", $format,
+                           $val );
+                     }
                   }
                   next;
                }
