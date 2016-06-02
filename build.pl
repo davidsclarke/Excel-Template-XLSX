@@ -71,7 +71,7 @@ content can be appended using Excel::Writer::XLSX. ],
 
    requires => {
       'perl'                 => '5.12.0',
-      'Excel::Writer::XLSX'  => 0.81,
+      'Excel::Writer::XLSX'  => 0.90,
       'Archive::Zip'         => 0,
       'Graphics::ColorUtils' => 0,
       'Scalar::Util'         => 0,

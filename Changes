@@ -1,5 +1,8 @@
 Revision history for Excel-Template-XLSX 
 
+v1.0.7  02-Jun-2016
+        Changed build script to require Excel::Writer::XLSX 0.90 
+        
 v1.0.6  02-Jun-2016
         Ticket #114543: Changed XLSX.pm and test scripts to use EWX public api $worksheet->get_name()
         issue arose from release of Excel::Writer::XLSX 0.90 
