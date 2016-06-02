@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'Excel::Writer::XLSX';
 
-use version; our $VERSION = version->declare("v1.0.5");
+use version; our $VERSION = version->declare("v1.0.6");
 
 use Archive::Zip;
 use Graphics::ColorUtils 'rgb2hls', 'hls2rgb';
@@ -132,7 +132,6 @@ return value, then just the $self object is returned.
       MERGED_RANGES  => {},
       SHARED_STRINGS => [],
       THEMES         => [],
-      UNIQUE_SHEETS  => {},
       ZIP            => [],
 
       template_callback => undef,
@@ -282,14 +281,11 @@ properties.  Properties in subsequent workbooks are ignored.
       map {
          my $name = $_->att('name');
          my $test = $name;
-         for ( my $i = 1;; $i++ ) {
-            last unless defined $self->{UNIQUE_SHEETS}{$test};
+         for ( my $i = 1; ; $i++ ) {
+            last unless $self->{EWX}->get_worksheet_by_name($test);
             $test = $name . "($i)";
          }
          my $sheet = $self->{EWX}->add_worksheet($test);
-
-         my $index = @{ $self->{EWX}->{_worksheets} };
-         $self->{UNIQUE_SHEETS}{$test} = $index-1;
 
          my $range = $self->{PRINT_AREA}{$name};
          $sheet->print_area($range) if $range;

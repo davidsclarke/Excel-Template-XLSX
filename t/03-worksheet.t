@@ -43,9 +43,11 @@ for my $list1 (@df) {
 is( $got_exchange, '0.96', 'Defined Name Exchange_rate' );
 is( $got_sales, 'Sheet1!$G$1:$H$10', 'Defined Name Sales' );
 
-my $got_print_area  = $twbk->{_worksheets}[0]{_print_area};
-my $got_repeat_cols = $twbk->{_worksheets}[0]{_repeat_cols};
-my $got_repeat_rows = $twbk->{_worksheets}[0]{_repeat_rows};
+my $sheet = $twbk->get_worksheet_by_name('Sheet1');
+
+my $got_print_area  = $sheet->{_print_area};
+my $got_repeat_cols = $sheet->{_repeat_cols};
+my $got_repeat_rows = $sheet->{_repeat_rows};
 
 is( $got_print_area,  'Sheet1!$A$1:$H$20', 'Print Area' );
 is( $got_repeat_rows, 'Sheet1!$1:$1',      'Rows to repeat at Top' );

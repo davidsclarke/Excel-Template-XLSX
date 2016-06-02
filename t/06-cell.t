@@ -44,7 +44,7 @@ my ( $gfh, $gfilename ) = tempfile( SUFFIX => '.xlsx' );
 my ( $self, $twbk ) = Excel::Template::XLSX->new( $gfilename, $efilename );
 $self->parse_template();
 
-my $sheet = $twbk->{_worksheets}[0];
+my $sheet = $twbk->get_worksheet_by_name('Sheet1');
 
 is( $sheet->{_row_sizes}{0},        20, 'Row Height' );
 is( int( $sheet->{_col_sizes}{3} ), 25, 'Column Width' );

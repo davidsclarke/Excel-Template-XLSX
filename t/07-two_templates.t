@@ -45,15 +45,15 @@ is( get_cell( $twbk, $hstring, 0, 1 ), 'A2 0', "Sheet 1 A2" );
 is( get_cell( $twbk, $hstring, 1, 0 ), 'A1 1', "Sheet 2 A1" );
 is( get_cell( $twbk, $hstring, 1, 1 ), 'A2 1', "Sheet 2 A2" );
 
-my $sheet0 = $twbk->{_worksheets}[0];
+my $sheet0 = $twbk->sheets(0);
 is( $sheet0->{_table}{2}{0}[2]{_num_format},
    '0.0%', "Template 1 Number format" );
-my $sheet1 = $twbk->{_worksheets}[1];
+my $sheet1 = $twbk->sheets(1);
 is( $sheet1->{_table}{2}{0}[2]{_num_format},
    '0.00%', "Template 2 Number format" );
 
-is( $self->{EWX}{_sheetnames}[0], 'Sheet1',    "Template 1 Sheet 1 name" );
-is( $self->{EWX}{_sheetnames}[1], 'Sheet1(1)', "Template 2 Sheet 1 renamed" );
+is( $sheet0->get_name(), 'Sheet1',    "Template 1 Sheet 1 name" );
+is( $sheet1->get_name(), 'Sheet1(1)', "Template 2 Sheet 1 renamed" );
 
 $twbk->close();
 
@@ -64,7 +64,7 @@ done_testing();
 ###############################################################################
 sub get_cell {
    my ( $wb, $h, $sheet_idx, $row ) = @_;
-   my $sheet     = $wb->{_worksheets}[$sheet_idx];
+   my $sheet     = $wb->sheets($sheet_idx);
    my $string_id = $sheet->{_table}{$row}{0}[1];
    return $h->{$string_id};
 }

@@ -60,7 +60,7 @@ for ( 0 .. $#got_rich ) {
    is( $got_rich[$_], $expected_rich[$_], "Rich String element $_" );
 }
 
-my $sheet = $twbk->{_worksheets}[0];
+my $sheet = $twbk->get_worksheet_by_name('Sheet1');
 
 is( $sheet->{_table}{4}{0}[1], q[A1 & "B1B1"], "Formula" );
 

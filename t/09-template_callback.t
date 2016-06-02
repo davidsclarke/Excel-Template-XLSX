@@ -43,7 +43,7 @@ $self->parse_template();
 my $got1 = ( sort keys %{ $twbk->{_str_table} } )[0];
 is( $got1, 'Output', "Shared Strings" );
 
-my $got2 = $twbk->{_worksheets}[0]{_header};
+my $got2 = $twbk->get_worksheet_by_name('Sheet1')->{_header};
 is( $got2, '&LReplace Template with Output', "Header" );
 
 is( $twbk->{_doc_properties}{subject}, 'Test Subject', "Properties" );

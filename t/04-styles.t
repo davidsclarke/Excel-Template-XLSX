@@ -77,7 +77,8 @@ my ( $self, $twbk ) = Excel::Template::XLSX->new( $gfilename, $efilename );
 $self->parse_template();
 
 # Get the format object referenced by cell 0,0
-my $got_sheet   = $twbk->{_worksheets}[0];
+my $got_sheet = $twbk->get_worksheet_by_name('Sheet1');
+
 my $got_format1 = $got_sheet->{_table}{0}{0}[2];
 is( $got_format1->{_color},        '#FF0000',   "Format color" );
 is( $got_format1->{_bold},         '1',         "Format Bold" );
