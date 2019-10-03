@@ -48,8 +48,7 @@ sub ACTION_git {
 
 END_SUBS
 
-my $class
-    = Module::Build->subclass( class => 'Build_with_Zip', code => $sub );
+my $class = Module::Build->subclass( class => 'Build_with_Zip', code => $sub );
 
 my $builder = $class->new(
    module_name       => 'Excel::Template::XLSX',
