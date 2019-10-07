@@ -22,6 +22,9 @@ sub ACTION_all {
 	print `perl build.pl`;
 # SET RELEASE_TESTING=1 & build test
 	print map {`build $_`} qw(test distcheck dist git);
+
+  print 'git push (using GitGui)';
+  print 'cpan upload (pause.perl.org)';
 }
 
 sub ACTION_CPAN {

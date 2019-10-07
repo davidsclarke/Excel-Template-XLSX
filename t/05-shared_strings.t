@@ -7,7 +7,6 @@ use Excel::Writer::XLSX;
 use Excel::Template::XLSX;
 use Test::More;
 use File::Temp qw(tempfile);
-use Mojo::Util qw(dumper);
 
 # Can be set to 1 to see the created template and output file during debugging
 $File::Temp::KEEP_ALL = 0;
