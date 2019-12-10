@@ -73,12 +73,12 @@ content can be appended using Excel::Writer::XLSX. ],
 
    requires => {
       'perl'                 => '5.12.0',
-      'Excel::Writer::XLSX'  => 0.90,
-      'Archive::Zip'         => 0,
-      'Graphics::ColorUtils' => 0,
-      'Scalar::Util'         => 0,
-      'XML::Twig'            => 0,
-   },
+      'Excel::Writer::XLSX'  =>     1.01,
+      'Archive::Zip'         =>        0,
+      'Graphics::ColorUtils' =>        0,
+      'Scalar::Util'         =>        0,
+      'XML::Twig'            =>        0,
+   },   
    add_to_cleanup => [qw(Excel-Template-XLSX-* *.zip *.pui *.prj make.bat)],
    create_makefile_pl => 'traditional',
 
