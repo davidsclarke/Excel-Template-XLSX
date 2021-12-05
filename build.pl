@@ -82,4 +82,5 @@ content can be appended using Excel::Writer::XLSX. ],
 
 );
 
+$builder->add_build_element( q[xlsx] );
 $builder->create_build_script();
