@@ -82,6 +82,12 @@ content can be appended using Excel::Writer::XLSX. ],
    },   
    add_to_cleanup => [qw(Excel-Template-XLSX-* *.zip *.pui *.prj make.bat)],
    create_makefile_pl => 'traditional',
+   meta_merge => {
+       resources => {
+           repository => 'https://github.com/davidsclarke/Excel-Template-XLSX',
+           bugtracker => 'https://github.com/davidsclarke/Excel-Template-XLSX/issues'
+       }
+   },
 
 );
 
